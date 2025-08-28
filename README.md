@@ -53,6 +53,8 @@ This dashboard analyzes profit drivers for non-financial companies using banking
 
 ```
 profit-drivers/
+├── .streamlit/
+│   └── config.toml                  # Streamlit configuration (light theme)
 ├── profit_drivers_dashboard.py       # Main Streamlit dashboard
 ├── data_processor.py                 # Core calculation engine  
 ├── banking_earnings_drivers.py       # Banking methodology reference
@@ -67,12 +69,35 @@ profit-drivers/
 └── .gitignore                       # Version control exclusions
 ```
 
+## Installation
+
+### Requirements
+- Python 3.8 or higher
+- pip package manager
+
+### Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### Verify Installation
+```bash
+python test_installation.py
+```
+
+This will check that all required packages and files are properly installed.
+
 ## Usage
 
 ### Running the Dashboard
 ```bash
 streamlit run profit_drivers_dashboard.py
 ```
+
+The dashboard will open in your default browser at `http://localhost:8501`
+
+### Configuration
+The app is configured to use a light theme by default. Settings can be modified in `.streamlit/config.toml`
 
 ### Dashboard Navigation
 

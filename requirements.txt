@@ -1,5 +1,20 @@
-streamlit
-plotly
-openpyxl
-pandas
-numpy
+# Core dependencies for Profit Drivers Dashboard
+# Python 3.8+ required
+
+# Web framework
+streamlit>=1.29.0
+
+# Data processing
+pandas>=2.0.0
+numpy>=1.24.0
+
+# Visualization
+plotly>=5.17.0
+
+# Excel file support
+openpyxl>=3.1.0
+
+# Optional performance improvements
+# Uncomment if needed:
+# pyarrow>=14.0.0  # For faster parquet file operations
+# numba>=0.58.0    # For JIT compilation of numerical functions
