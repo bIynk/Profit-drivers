@@ -429,7 +429,7 @@ Total_Impact = Revenue_Impact + Operating_Cost_Impact + Interest_Impact + Non_Re
 | **Main Components** | 3 (Top Line, Cost Cutting, Non-Recurring) | 4 (Revenue, Operating Costs, Interest, Non-Recurring) |
 | **Revenue Components** | NII + Fees | Net Revenue (single line) |
 | **Cost Components** | OPEX + Provisions | COGS + SG&A (Operating) + IE (separate) |
-| **Primary Growth Metric** | PBT Growth % | NPATMI Growth % |
+| **Primary Growth Metric** | PBT Growth % | PBT Growth % (Display), NPATMI Growth % (Alternative) |
 | **Special Decomposition** | Loan Growth vs NIM | None (no equivalent) |
 | **Threshold** | 50 billion | 50 billion (same) |
 | **Score Cap** | ±500% | ±500% (same) |

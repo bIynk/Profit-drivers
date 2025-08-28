@@ -80,10 +80,16 @@ When writing code for this repository:
 6. **Display Conventions**:
    - All monetary values in billions VND
    - Percentages with 1 decimal place
-   - NPATMI growth as primary metric (not PBT growth)
+   - PBT growth as primary metric (changed from NPATMI in v2.5)
    - Raw contributions, scores, and impacts all displayed in tables
 
 ## Version History & Changes
+
+### [3.1.0] - 2024-12-28 - PBT Growth Display Update
+- Changed primary display metric from NPATMI Growth % to PBT Growth %
+- Updated Summary Statistics to show only positive/negative company counts
+- Removed Average and Median growth statistics for cleaner display
+- Note: Impact calculations still use PBT Growth internally (unchanged)
 
 ### [3.0.0] - 2024-12-28 - Gross Margin Reorganization
 

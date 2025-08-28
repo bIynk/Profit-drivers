@@ -6,16 +6,16 @@ This dashboard analyzes profit drivers for non-financial companies using banking
 ## Recent Updates (December 2024)
 
 ### 1. Enhanced Interactive Table
-- **Sortable Columns**: Sort data by any metric (NPATMI Growth %, Revenue, Operating Costs, COGS, SG&A, Interest, Non-Recurring)
+- **Sortable Columns**: Sort data by any metric (PBT Growth %, Gross Margin, SG&A, Interest, Non-Recurring)
 - **Sort Controls**: Dropdown selector with ascending/descending toggle
 - **Visual Sort Indicators**: ▼ for descending, ▲ for ascending in column headers
 
 ### 2. Visual Hierarchy Improvements
 - **Two-tier Headers**: Clear distinction between main components and sub-components
 - **Color Coding**:
-  - Main components (Revenue, Operating Costs, Interest, Non-Recurring): Dark blue (#1976d2)
-  - Sub-components (COGS, SG&A): Light blue (#64b5f6) with italic styling
-  - Metrics (NPATMI Growth %): Navy blue (#0d47a1)
+  - Main components (Gross Margin, SG&A, Interest, Non-Recurring): Dark blue (#1976d2)
+  - Sub-components (Revenue Growth, Margin Expansion): Light blue (#64b5f6) with italic styling
+  - Metrics (PBT Growth %): Navy blue (#0d47a1)
 - **Tree Structure**: Sub-components use ├ and └ symbols to show hierarchy
 - **Background Shading**: Sub-component cells have subtle background tint
 
@@ -24,11 +24,11 @@ This dashboard analyzes profit drivers for non-financial companies using banking
 - **Comprehensive Information**: Each cell shows:
   - Raw contribution amount (billions VND)
   - Score (% of PBT change)
-  - Impact (Score × NPATMI Growth %)
+  - Impact (Score × PBT Growth %)
 - **Visual Feedback**: Hover effects with smooth transitions
 
 ### 4. Simplified Display
-- **Removed PBT Change Column**: Focus on NPATMI growth as primary metric
+- **Primary Metric**: PBT Growth % as the main performance indicator
 - **Raw Values in Billions VND**: All monetary values displayed in billions for clarity
 - **Score Breakdown**: Complete scores available in expandable section
 
@@ -145,7 +145,7 @@ Score = (Component_Change / |PBT_Change_Adjusted|) × 100
 
 ### Impact Calculation
 ```python
-Impact = Score × |NPATMI_Growth_%| / 100
+Impact = Score × |PBT_Growth_%| / 100
 ```
 
 ### Verification
@@ -179,13 +179,27 @@ For questions or issues, refer to:
 - `CLAUDE.md` for coding guidelines
 
 ## Version History
+- **v3.1** (Dec 2024): Changed primary display metric to PBT Growth %, simplified Summary Statistics
 - **v3.0** (Dec 2024): Gross Margin reorganization with Revenue Growth and Margin Expansion decomposition
 - **v2.5** (Dec 2024): Repository cleanup, configuration management, optimized code structure
 - **v2.0** (Dec 2024): Interactive sorting, enhanced visual hierarchy, always-on tooltips
 - **v1.5**: Added hover tooltips with impact scores
 - **v1.0**: Initial implementation with banking methodology
 
-## Recent Changes (v2.5 - Repository Optimization)
+## Recent Changes
+
+### v3.1 - PBT Growth Focus (Dec 2024)
+- **Display Changes**:
+  - Changed primary metric from NPATMI Growth % to PBT Growth %
+  - PBT Growth now shown in main table and all visualizations
+  - Updated histogram and trend analysis to use PBT Growth
+- **Summary Statistics**:
+  - Removed Average and Median growth metrics
+  - Now shows only count and percentage of positive/negative growth companies
+  - Cleaner, more focused summary section
+- **Documentation**: Updated all references to reflect PBT Growth as primary metric
+
+### v2.5 - Repository Optimization (Dec 2024)
 - Removed test files and old dashboard versions
 - Consolidated CSS styling
 - Added configuration management
