@@ -98,7 +98,7 @@ DASHBOARD_CSS = """
         background-color: rgba(102, 126, 234, 0.08) !important;
     }
     
-    /* NPATMI Growth header highlight */
+    /* PBT Growth header highlight */
     .stDataFrame thead th:nth-child(3) {
         background-color: rgba(76, 175, 80, 0.08) !important;
         font-weight: bold !important;
@@ -202,7 +202,7 @@ def prepare_display_data(df, year, quarter, comparison_type):
     
     # Select relevant columns for display with v3.0.0 structure
     display_columns = [
-        'Ticker', 'Sector', f'NPATMI_Growth_%{suffix}',
+        'Ticker', 'Sector', f'PBT_Growth_%{suffix}',
         f'Gross_Margin_Impact{suffix}', f'SGA_Impact{suffix}',
         f'Interest_Impact{suffix}', f'Non_Recurring_Impact{suffix}',
         f'Raw_Gross_Margin{suffix}', f'Raw_SGA{suffix}',
@@ -212,7 +212,7 @@ def prepare_display_data(df, year, quarter, comparison_type):
         f'Interest_Score{suffix}', f'Non_Recurring_Score{suffix}',
         f'Revenue_Sub_Score{suffix}', f'COGS_Sub_Score{suffix}',
         f'Revenue_Sub_Impact{suffix}', f'COGS_Sub_Impact{suffix}',
-        f'PBT_Change{suffix}', f'PBT_Growth_%{suffix}', f'NPATMI_Change{suffix}'
+        f'PBT_Change{suffix}', f'NPATMI_Growth_%{suffix}', f'NPATMI_Change{suffix}'
     ]
     
     # Filter to only include columns that exist
@@ -221,9 +221,9 @@ def prepare_display_data(df, year, quarter, comparison_type):
     # Create display dataframe
     display_df = period_df[available_columns].copy()
     
-    # Sort by NPATMI Growth % (descending)
-    if f'NPATMI_Growth_%{suffix}' in display_df.columns:
-        display_df = display_df.sort_values(f'NPATMI_Growth_%{suffix}', ascending=False)
+    # Sort by PBT Growth % (descending)
+    if f'PBT_Growth_%{suffix}' in display_df.columns:
+        display_df = display_df.sort_values(f'PBT_Growth_%{suffix}', ascending=False)
     
     return display_df, suffix, comp_label
 
@@ -238,7 +238,7 @@ with tab1:
     )
     
     # Remove rows with NaN in key columns
-    key_cols = [f'NPATMI_Growth_%{suffix}', f'Gross_Margin_Impact{suffix}']
+    key_cols = [f'PBT_Growth_%{suffix}', f'Gross_Margin_Impact{suffix}']
     available_key_cols = [col for col in key_cols if col in display_df.columns]
     if available_key_cols:
         display_df = display_df.dropna(subset=available_key_cols)
@@ -291,11 +291,11 @@ with tab1:
             # These are already properly calculated with row-specific PBT_Growth_%
             
             # Select and rename columns with proper hierarchy
-            # Order: Ticker, Sector, NPATMI Growth, Gross Margin (Revenue Growth, Margin Expansion), SG&A, Interest, Non-Recurring
+            # Order: Ticker, Sector, PBT Growth, Gross Margin (Revenue Growth, Margin Expansion), SG&A, Interest, Non-Recurring
             display_columns = {
                 'Ticker': 'Ticker',
                 'Sector': 'Sector',
-                f'NPATMI_Growth_%{suffix}': 'NPATMI Growth %',
+                f'PBT_Growth_%{suffix}': 'PBT Growth %',
                 f'Gross_Margin_Impact{suffix}': 'Gross Margin',
                 f'Revenue_Sub_Impact{suffix}': '├ Revenue Growth',
                 f'COGS_Sub_Impact{suffix}': '└ Margin Expansion',
@@ -322,10 +322,10 @@ with tab1:
             column_config = {
                 'Ticker': st.column_config.TextColumn('Ticker', width=80),
                 'Sector': st.column_config.TextColumn('Sector', width=130),
-                'NPATMI Growth %': st.column_config.NumberColumn(
-                    'NPATMI Growth %',
+                'PBT Growth %': st.column_config.NumberColumn(
+                    'PBT Growth %',
                     format='%.1f%%',
-                    help='NPATMI Growth Rate',
+                    help='Profit Before Tax Growth Rate',
                     width=120
                 ),
                 'Gross Margin': st.column_config.NumberColumn(
@@ -407,8 +407,8 @@ with tab1:
                                     else:
                                         style_df.loc[idx, col] = 'color: #495057; font-weight: 400; font-size: 12px; background-color: #eceff1; padding-left: 25px; font-style: italic'
                         
-                        elif col == 'NPATMI Growth %':
-                            # NPATMI Growth styling
+                        elif col == 'PBT Growth %':
+                            # PBT Growth styling
                             for idx in x.index:
                                 val = x.loc[idx, col]
                                 if pd.notna(val):
@@ -441,27 +441,28 @@ with tab1:
             
             # Calculate key statistics
             total_companies = len(display_df)
-            positive_growth_mask = display_df[f'NPATMI_Growth_%{suffix}'] > 0
+            positive_growth_mask = display_df[f'PBT_Growth_%{suffix}'] > 0
             positive_companies = positive_growth_mask.sum()
             positive_percentage = (positive_companies / total_companies * 100) if total_companies > 0 else 0
+            negative_companies = total_companies - positive_companies
+            negative_percentage = (negative_companies / total_companies * 100) if total_companies > 0 else 0
             
-            # Display main metrics
-            col1, col2, col3 = st.columns(3)
+            # Display company count metrics
+            col1, col2 = st.columns(2)
             
             with col1:
                 st.metric(
-                    "Companies with Positive NPATMI Growth", 
-                    f"{positive_percentage:.1f}%",
-                    delta=f"{positive_companies}/{total_companies} companies"
+                    "Companies with Positive PBT Growth", 
+                    f"{positive_companies} ({positive_percentage:.1f}%)",
+                    delta=None
                 )
             
             with col2:
-                avg_growth = display_df[f'NPATMI_Growth_%{suffix}'].mean()
-                st.metric("Average NPATMI Growth", f"{avg_growth:.1f}%")
-            
-            with col3:
-                median_growth = display_df[f'NPATMI_Growth_%{suffix}'].median()
-                st.metric("Median NPATMI Growth", f"{median_growth:.1f}%")
+                st.metric(
+                    "Companies with Negative PBT Growth", 
+                    f"{negative_companies} ({negative_percentage:.1f}%)",
+                    delta=None
+                )
             
             # Analyze primary profit drivers for companies with positive growth
             if positive_companies > 0:
@@ -510,19 +511,19 @@ with tab1:
                                 delta=f"{row.Count} companies"
                             )
             
-            # Create histogram of NPATMI growth distribution
-            st.markdown("#### NPATMI Growth Distribution")
+            # Create histogram of PBT growth distribution
+            st.markdown("#### PBT Growth Distribution")
             
             import plotly.graph_objects as go
             
             # Cap values at -100% and 100% for display
-            growth_data = display_df[f'NPATMI_Growth_%{suffix}'].clip(-100, 100)
+            growth_data = display_df[f'PBT_Growth_%{suffix}'].clip(-100, 100)
             
             fig = go.Figure()
             fig.add_trace(go.Histogram(
                 x=growth_data,
                 nbinsx=40,
-                name='NPATMI Growth Distribution',
+                name='PBT Growth Distribution',
                 marker_color='rgba(26, 118, 255, 0.7)',
                 hovertemplate='Growth Range: %{x}<br>Count: %{y}<extra></extra>'
             ))
@@ -531,8 +532,8 @@ with tab1:
             fig.add_vline(x=0, line_dash="dash", line_color="red", opacity=0.5)
             
             fig.update_layout(
-                title=f"NPATMI Growth Distribution ({comp_label})",
-                xaxis_title="NPATMI Growth (%)",
+                title=f"PBT Growth Distribution ({comp_label})",
+                xaxis_title="PBT Growth (%)",
                 yaxis_title="Number of Companies",
                 xaxis=dict(range=[-100, 100], tickformat='.0f', dtick=20),
                 yaxis=dict(title="Number of Companies"),
@@ -601,9 +602,9 @@ with tab2:
             with col2:
                 st.metric("Period", f"{selected_year}Q{selected_quarter}")
             with col3:
-                growth_col = f'NPATMI_Growth_%{suffix}'
+                growth_col = f'PBT_Growth_%{suffix}'
                 if growth_col in latest:
-                    st.metric(f"NPATMI Growth ({comp_label})", f"{latest[growth_col]:.1f}%")
+                    st.metric(f"PBT Growth ({comp_label})", f"{latest[growth_col]:.1f}%")
             with col4:
                 if 'Gross_Margin_%' in latest:
                     st.metric("Gross Margin %", f"{latest['Gross_Margin_%']:.1f}%")
@@ -715,7 +716,7 @@ with tab3:
         
         # Create metric selector
         metric_options = {
-            'NPATMI Growth %': f'NPATMI_Growth_%{suffix}',
+            'PBT Growth %': f'PBT_Growth_%{suffix}',
             'Gross Margin Impact': f'Gross_Margin_Impact{suffix}',
             'SG&A Impact': f'SGA_Impact{suffix}',
             'Interest Impact': f'Interest_Impact{suffix}',
@@ -750,7 +751,7 @@ with tab3:
         ]
         
         if len(latest_comparison) > 0:
-            comparison_cols = ['Ticker', f'NPATMI_Growth_%{suffix}', 
+            comparison_cols = ['Ticker', f'PBT_Growth_%{suffix}', 
                               f'Gross_Margin_Impact{suffix}', f'SGA_Impact{suffix}',
                               f'Interest_Impact{suffix}', f'Non_Recurring_Impact{suffix}']
             
